@@ -44,7 +44,7 @@ public class BetService {
     @Transactional
     public BetDto placeBet(PlaceBetRequest betRequest) {
         //NON-AI comment
-        // some pessimistic locking is needed here, so that the user's balance is not updated with wrong values
+        //  pessimistic locking (SELECT for UPDATE) is needed here, so that the user's balance is not updated with wrong values by concurrent calls
         User user = userService.findOrCreateUser(betRequest.getUserId());
 
         if (user.getBalance().compareTo(betRequest.getAmount()) < 0) {
