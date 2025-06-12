@@ -29,6 +29,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    //NON-AI comment
+    // this method should be changed to a SELECT for UPDATE statement
+    // so the user balance is protected from concurrent updates
     public User findUserByExternalId(Long externalUserId) {
         return userRepository.findByExternalUserId(externalUserId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with external ID: " + externalUserId));
