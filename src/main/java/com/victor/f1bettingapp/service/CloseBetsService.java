@@ -33,7 +33,7 @@ public class CloseBetsService {
     public void handle(EventOutcomeProcessedEvent event) {
         //NON-AI comment
         // to reduce lock contention, this method should only update the events table status to FINISHED and push each bet on a message queue for win/lose processing
-        // so that users can't be anymore on this event
+        // so that users can't bet anymore on this event
         EventOutcome outcome = event.getEventOutcome();
         logger.info("Asynchronously processing event outcome ID: {} for external event ID: {}", outcome.getId(), outcome.getExternalEventId());
 
