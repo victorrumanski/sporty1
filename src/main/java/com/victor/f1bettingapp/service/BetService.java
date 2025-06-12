@@ -43,12 +43,17 @@ public class BetService {
 
     @Transactional
     public BetDto placeBet(PlaceBetRequest betRequest) {
+        //NON-AI comment
+        // some pessimistic locking is needed here, so that the user's balance is not updated with wrong values
         User user = userService.findOrCreateUser(betRequest.getUserId());
 
         if (user.getBalance().compareTo(betRequest.getAmount()) < 0) {
             throw new InsufficientFundsException("User " + user.getExternalUserId() + " has insufficient funds to place a bet of " + betRequest.getAmount());
         }
-
+        
+        //NON-AI comment
+        // to prevent betting on a closed event, there would need to be a table that holds the Event data with status that is updated by the CloseBetsService
+        // also check here if the event is finished or not so placeBet throws an error for closed Events.
         Optional<EventDto> eventOptional = eventService.getSingleEvent(betRequest.getExternalEventId(), betRequest.getDriverId());
 
         EventDto eventDetails = eventOptional.orElseThrow(() ->
