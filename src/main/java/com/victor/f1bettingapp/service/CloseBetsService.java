@@ -31,6 +31,9 @@ public class CloseBetsService {
     @EventListener
     @Transactional
     public void handle(EventOutcomeProcessedEvent event) {
+        //NON-AI comment
+        // to reduce lock contention, this method should only update the events table status to FINISHED and push each bet on a message queue for win/lose processing
+        // so that users can't be anymore on this event
         EventOutcome outcome = event.getEventOutcome();
         logger.info("Asynchronously processing event outcome ID: {} for external event ID: {}", outcome.getId(), outcome.getExternalEventId());
 
@@ -51,6 +54,8 @@ public class CloseBetsService {
                 // Ensure userService.updateUserBalance is robust and potentially transactional itself
                 // or consider if this operation needs to be part of the same transaction.
                 // For simplicity here, assuming userService.updateUserBalance handles its own transaction or is safe to call.
+                //NON-AI comment
+                // here another pessimistic lock would be needed to update the correct user balance
                 userService.updateUserBalance(bet.getUser().getExternalUserId(), prize);
                 logger.info("Async: Bet ID {} WON. User {} awarded {} EUR.", bet.getId(), bet.getUser().getExternalUserId(), prize);
             } else {
