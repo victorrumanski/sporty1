@@ -54,6 +54,7 @@ public class BetService {
         //NON-AI comment
         // to prevent betting on a closed event, there would need to be a table that holds the Event data with status that is updated by the CloseBetsService
         // also check here if the event is finished or not so placeBet throws an error for closed Events.
+        // ALSO important is that the http call here could be changed to cached data so that DB lock contention on the user's balance is reduced to a minimum.
         Optional<EventDto> eventOptional = eventService.getSingleEvent(betRequest.getExternalEventId(), betRequest.getDriverId());
 
         EventDto eventDetails = eventOptional.orElseThrow(() ->
