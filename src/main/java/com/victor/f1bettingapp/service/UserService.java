@@ -39,6 +39,9 @@ public class UserService {
 
     // This method might be called by BetService internally
     @Transactional
+    //NON-AI
+    // this method should not be open to public API, but it needs to be called by other services
+    // the @transactional shuold have a PROPAGATION_REQUIRED so that it won't execute outside a txn
     public void updateUserBalance(Long externalUserId, BigDecimal amountChange) {
         User user = findUserByExternalId(externalUserId);
         BigDecimal newBalance = user.getBalance().add(amountChange);
